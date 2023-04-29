@@ -4,7 +4,7 @@ is_exit = True
 
 class Banking:
     balance = 0.0
-    number = 3137909583
+    number_code = [[1,1]]
     code = 1234
     is_login = False
 
@@ -28,23 +28,30 @@ class Banking:
             print("Please Login First ")
 
     def login(self, ):
-        print("Enter Number and Password ")
-        user_number = int(input("> Enter login number "))
-        user_code = int(input("> Enter login number "))
-        if user_number == self.number and user_code == self.code:
-            print("Login successfully  ")
-            self.is_login = True
+        if self.is_login:
+            print(" Already Logged In")
         else:
-            print("Login not successful")
+            print("Enter Number and Password ")
+            user_number = int(input("> Enter login number "))
+            user_code = int(input("> Enter login number "))
+            new_element=[user_number,user_code]
+            if new_element in self.number_code:
+                print("Login successfully  ")
+                self.is_login = True
+            else:
+                print("Login not successful")
 
     def signup(self):
         print("Enter Number and Password to sign up")
         try:
             user_number = int(input("> Enter signup number "))
             user_code = int(input("> Enter signup number "))
-            self.number = user_number
-            self.code = user_code
-            print("SignUp Successfully  ")
+            new = [user_number, user_code]
+            if new in self.number_code:
+                print("Number already registered ")
+            else:
+                self.number_code.append(new)
+                print("SignUp Successfully  ")
 
         except ValueError:
             print("Enter correct values ")
@@ -78,13 +85,13 @@ def target(val):
 
 
 
-while is_exit == True:
+while True:
     print("""
     > SignUp - Write S
     > Login  - Write L
     > Balance- Write B
     > Deposit- Write D
-    > Withdra- Write W
+    > Withdraw-Write W
     > LogOut - Write O
     > Exit   - Write E
     """)
