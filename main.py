@@ -7,19 +7,39 @@ class User(object):
         self.phone_number = phone_number
         self.password = password
         self.account_balance = account_balance
-    
+
     def display(self):
-        print(f'{self.phone_number} has {self.account_balance} in his account.')
+        print(f' Your account number {self.phone_number}: has ${self.account_balance} balance in your account.')
 
     def is_valid_credential(self, phone_number, password):
         return self.phone_number == phone_number and self.password == password
-    
+
+    def is_valid_user(self, phone_number):
+        return self.phone_number == phone_number
+
+    def deposit(self):
+        amount = float(input("Enter desposit amount "))
+        if amount < 0:
+            print("Pleas enter valid amount ")
+        else:
+            self.account_balance += amount
+            print("Desposited successfully ")
+
+    def withdraw(self):
+        amount = float(input("Enter withdraw amount "))
+        if (self.account_balance-amount)<0:
+            print("Balance not sufficient  ")
+        else:
+            self.account_balance -= amount
+            print("Withdrew successfully ")
+
     @staticmethod
     def main_menu():
-        print('1: Deposit')
-        print('2: Withdraw')
-        print('3: Balance Inquiry')
-        print('4: Logout')
+            print('1: Deposit')
+            print('2: Withdraw')
+            print('3: Balance Inquiry')
+            print('4: Logout')
+            return int(input(">> "))
 
 
 class BankAccountManager(object):
@@ -38,6 +58,11 @@ class BankAccountManager(object):
             if user.is_valid_credential(phone_number, password):
                 return user
 
+    def search_Account(self, search_account_number):
+        for user in self.users:
+            if user.is_valid_user(search_account_number):
+                return user
+
     @staticmethod
     def welcome_message():
         print('Welcome to Alee Bank Ltd.')
@@ -49,7 +74,7 @@ class BankAccountManager(object):
         print('3: Display All Accounts')
         print('4: Search Account')
         print('5: Exit')
-
+        # return input(">> ")
 
 
 bank_account_manager = BankAccountManager()
@@ -57,7 +82,7 @@ BankAccountManager.welcome_message()
 
 while True:
     BankAccountManager.main_menu()
-    choice = int(input())
+    choice = int(input(">> "))
     if choice == 1:
         phone_number = input('Phone Number: ')
         password = input('Password: ')
@@ -71,10 +96,34 @@ while True:
         if user is None:
             print('Invalid  Credentials')
         else:
-            User.main_menu()
+            while True:
+                inner_choice=User.main_menu()
+                if inner_choice == 1:
+                    user.deposit()
+                elif inner_choice == 2:
+                    user.withdraw()
+                elif inner_choice == 3:
+                    user.display()
+                elif inner_choice == 4:
+                    break
+                else:
+                    print("Please enter valid option  ")
 
-            
-    else:
+    elif choice == 3:
+        bank_account_manager.display_all_accounts()
+
+    elif choice == 4:
+        search_account = input("Enter Account Number to search: ")
+        user = bank_account_manager.search_Account(search_account)
+        if user is None:
+            print("Account doesn't exist")
+        else:
+            print(" Account number " + user.phone_number + " exists. ")
+
+    elif choice == 5:
         break
+
+    else:
+        print("please enter valid option number. Thank you ")
 
 print('Thank you.')
